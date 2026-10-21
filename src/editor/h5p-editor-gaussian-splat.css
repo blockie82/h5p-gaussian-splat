@@ -1,0 +1,149 @@
+.h5peditor-gs-preview {
+  margin-top: 1em;
+}
+
+.h5peditor-gs-stage {
+  position: relative;
+  width: 100%;
+  max-width: 48rem;
+  aspect-ratio: 16 / 9;
+  margin-top: 0.5em;
+  border-radius: 0.25em;
+  overflow: hidden;
+  background: #1e1f22;
+}
+
+.h5peditor-gs-loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0.5em 1em;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.9em;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.h5peditor-gs-info {
+  margin-top: 0.4em;
+  color: #555;
+  font-size: 0.875em;
+  min-height: 1.2em;
+}
+
+.h5peditor-gs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em 0.75em;
+  margin-top: 0.6em;
+}
+
+.h5peditor-gs-actions .h5peditor-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.h5peditor-gs-actions .h5peditor-button svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.h5peditor-gs-view-state {
+  color: #555;
+  font-size: 0.875em;
+}
+
+.h5peditor-gs-messages p {
+  margin: 0.5em 0 0;
+  padding: 0.6em 0.8em;
+  border-radius: 0.25em;
+  font-size: 0.875em;
+  line-height: 1.4;
+}
+
+.h5peditor-gs-error {
+  background: #fdecea;
+  border: 1px solid #f5c2bc;
+  color: #a12d1f;
+}
+
+.h5peditor-gs-warning {
+  background: #fff6e0;
+  border: 1px solid #f0d79a;
+  color: #6b4b00;
+  word-break: break-word;
+}
+
+.h5peditor-gs-info-message {
+  background: #eaf3fc;
+  border: 1px solid #b9d6f2;
+  color: #1d4e7e;
+}
+
+/* Hotspot placement */
+.h5peditor-gs-stage.picking canvas {
+  cursor: crosshair !important;
+}
+
+.h5peditor-gs-pick-banner {
+  position: absolute;
+  left: 50%;
+  top: 0.6rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  max-width: calc(100% - 1.2rem);
+  padding: 0.45em 0.5em 0.45em 0.9em;
+  border-radius: 999px;
+  background: rgba(20, 20, 24, 0.85);
+  color: #fff;
+  font-size: 0.9em;
+  z-index: 4;
+}
+
+.h5peditor-gs-pick-cancel {
+  flex: none;
+  padding: 0.25em 0.8em;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #222;
+  font: inherit;
+  cursor: pointer;
+}
+
+.h5peditor-gs-hotspot-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em 0.75em;
+  margin-bottom: 1em;
+}
+
+.h5peditor-gs-hotspot-tools .h5peditor-button,
+.h5peditor-gs-add-hotspot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.h5peditor-gs-hotspot-tools svg,
+.h5peditor-gs-add-hotspot svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.h5peditor-gs-hotspot-status {
+  color: #2b6a2b;
+  font-size: 0.875em;
+}
+
+.h5peditor-gs-hotspot-status.missing {
+  color: #a35a00;
+}

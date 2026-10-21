@@ -1,0 +1,276 @@
+{
+  "semantics": [
+    {
+      "label": "Gaussian splat",
+      "fields": [
+        {
+          "label": "Splat file",
+          "description": "Upload a Gaussian splat as .ply (standard 3DGS output, also compressed .ply) or .sog (PlayCanvas SOG, much smaller). Large .ply files load slowly – consider converting them to .sog first."
+        },
+        {
+          "label": "Up direction in the file",
+          "description": "Most captures made with 3D Gaussian Splatting tools (COLMAP, Postshot, Nerfstudio, GaussForge) use -Y as up. Change this if the scene appears upside down or on its side.",
+          "options": [
+            {
+              "label": "-Y (typical for 3DGS captures)"
+            },
+            {
+              "label": "+Y"
+            },
+            {
+              "label": "+Z"
+            },
+            {
+              "label": "-Z"
+            }
+          ]
+        },
+        {
+          "label": "Fine-tune orientation",
+          "description": "Optional small corrections, in degrees, if the scene looks tilted. The preview above updates when you change a value.",
+          "fields": [
+            {
+              "label": "Tilt forwards / backwards"
+            },
+            {
+              "label": "Tilt sideways"
+            },
+            {
+              "label": "Turn around the vertical axis"
+            }
+          ]
+        },
+        {
+          "label": "Starting view"
+        },
+        {
+          "label": "Alternative text",
+          "description": "Describe the scene for people using screen readers."
+        }
+      ]
+    },
+    {
+      "label": "Hotspots",
+      "description": "Numbered markers on the scene that learners click to see text, images, video or audio. Use the \"Add hotspot\" button under the preview above, then click the scene where it should go.",
+      "fields": [
+        {
+          "label": "Hotspots",
+          "field": {
+            "label": "Hotspot",
+            "fields": [
+              {
+                "label": "Position"
+              },
+              {
+                "label": "Title",
+                "description": "Shown when hovering over the hotspot and as the heading of its popup."
+              },
+              {
+                "label": "Content",
+                "field": {
+                  "label": "Content item",
+                  "options": [
+                    {},
+                    {},
+                    {},
+                    {}
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "label": "dummy"
+        }
+      ]
+    },
+    {
+      "label": "Behaviour settings",
+      "fields": [
+        {
+          "label": "Load the scene",
+          "description": "Splat files can be large. Choose \"When the learner clicks\" to show the poster image and a load button first.",
+          "options": [
+            {
+              "label": "Immediately"
+            },
+            {
+              "label": "When the learner clicks"
+            }
+          ]
+        },
+        {
+          "label": "Auto-rotate",
+          "description": "Slowly rotate the scene until the learner turns it off."
+        },
+        {
+          "label": "Auto-rotate speed (degrees per second)"
+        },
+        {
+          "label": "Allow panning"
+        },
+        {
+          "label": "Allow zooming"
+        },
+        {
+          "label": "Allow fly mode (W, A, S, D)",
+          "description": "Learners can fly through the scene like in SuperSplat: W, A, S, D move, Q/E move down/up, drag looks around, Shift moves faster. Pressing a movement key switches to fly mode."
+        },
+        {
+          "label": "Starting camera mode",
+          "description": "Orbit suits objects. Fly suits rooms and landscapes you move through.",
+          "options": [
+            {
+              "label": "Orbit"
+            },
+            {
+              "label": "Fly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Visual settings",
+      "fields": [
+        {
+          "label": "Background colour"
+        },
+        {
+          "label": "Hotspot colour"
+        },
+        {
+          "label": "Background image",
+          "description": "Optional image shown behind the splat. Set the background colour's transparency to see it."
+        },
+        {
+          "label": "Poster image",
+          "description": "Optional image shown before the scene has loaded, for example a screenshot of the scene."
+        }
+      ]
+    },
+    {
+      "label": "Size settings",
+      "fields": [
+        {
+          "label": "Aspect ratio",
+          "description": "Width to height, for example 16:9, 4:3 or 1:1.",
+          "default": "16:9"
+        },
+        {
+          "label": "Maximum width",
+          "description": "Optional maximum width in CSS units, for example 800px or 50rem."
+        },
+        {
+          "label": "Minimum height",
+          "description": "Optional minimum height in CSS units, for example 300px."
+        },
+        {
+          "label": "Maximum height",
+          "description": "Optional maximum height in CSS units, for example 40rem."
+        }
+      ]
+    },
+    {
+      "label": "User interface",
+      "fields": [
+        {
+          "label": "No splat found",
+          "default": "Could not load a Gaussian splat. Did someone forget to upload one?"
+        },
+        {
+          "label": "Loading",
+          "default": "Loading 3D scene…"
+        },
+        {
+          "label": "Preparing (after download)",
+          "default": "Preparing 3D scene…"
+        },
+        {
+          "label": "Load button",
+          "default": "Load 3D scene"
+        },
+        {
+          "label": "Load error",
+          "default": "The 3D scene could not be loaded."
+        },
+        {
+          "label": "Unsupported file",
+          "default": "This file is not a supported Gaussian splat. Please use a .ply or .sog file."
+        },
+        {
+          "label": "PLY without splat data",
+          "default": "This PLY file does not contain Gaussian splat data."
+        },
+        {
+          "label": "WebGL 2 not available",
+          "default": "Your browser does not support WebGL 2, which is needed to display this 3D scene."
+        },
+        {
+          "label": "Mouse wheel hint",
+          "default": "Click the scene or hold Ctrl to zoom with the mouse wheel"
+        },
+        {
+          "label": "Empty hotspot",
+          "default": "This hotspot has no content yet."
+        }
+      ]
+    },
+    {
+      "label": "Accessibility texts",
+      "fields": [
+        {
+          "label": "Default label for the scene",
+          "description": "Used when no alternative text has been set.",
+          "default": "3D Gaussian splat scene"
+        },
+        {
+          "label": "Interaction instructions",
+          "description": "Read out to screen reader users when the scene gets focus.",
+          "default": "Orbit mode: drag to rotate, right-drag or Shift-drag to pan, scroll or pinch to zoom, arrow keys rotate. Pressing W, A, S or D switches to fly mode: W, A, S, D and the arrow keys move, Q and E move down and up, drag to look around, scroll to move forwards or backwards. Hold Shift to move faster. Home resets the view."
+        },
+        {
+          "label": "Full screen button (enter)",
+          "default": "Enter full screen mode"
+        },
+        {
+          "label": "Full screen button (exit)",
+          "default": "Exit full screen mode"
+        },
+        {
+          "label": "Reset view button",
+          "default": "Reset view"
+        },
+        {
+          "label": "Auto-rotate button (start)",
+          "default": "Start auto-rotation"
+        },
+        {
+          "label": "Auto-rotate button (stop)",
+          "default": "Stop auto-rotation"
+        },
+        {
+          "label": "Fly mode button",
+          "default": "Switch to fly mode (W, A, S, D to move, drag to look around)"
+        },
+        {
+          "label": "Orbit mode button",
+          "default": "Switch to orbit mode (drag to rotate around the scene)"
+        },
+        {
+          "label": "Close button",
+          "default": "Close"
+        },
+        {
+          "label": "Hotspot list button",
+          "default": "List of hotspots"
+        },
+        {
+          "label": "Hotspot label (used when a hotspot has no title)",
+          "default": "Hotspot :num"
+        }
+      ]
+    }
+  ]
+}

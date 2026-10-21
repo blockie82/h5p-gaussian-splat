@@ -1,0 +1,7 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;padding:16px;font-family:sans-serif;background:#eee}#c{max-width:900px}</style></head>
+<body><div id="c"></div>
+<script src="h5p-dist/main.bundle.js"></script>
+<script>
+const ws = new URLSearchParams(location.search).get('ws') || 'ws-ply';
+new H5PStandalone.H5P(document.getElementById('c'), {h5pJsonPath: '/' + ws, frameJs: 'h5p-dist/frame.bundle.js', frameCss: 'h5p-dist/styles/h5p.css', embedType: 'iframe'});
+</script></body></html>

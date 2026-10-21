@@ -1,0 +1,1 @@
+{"title": "Bovisands (Gaussian splat)", "language": "und", "mainLibrary": "H5P.GaussianSplat", "embedTypes": ["iframe"], "license": "U", "defaultLanguage": "en", "preloadedDependencies": [{"machineName": "H5P.GaussianSplat", "majorVersion": "1", "minorVersion": "0"}, {"machineName": "H5P.AdvancedText", "majorVersion": "1", "minorVersion": "1"}]}

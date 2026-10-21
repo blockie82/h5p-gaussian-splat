@@ -1,0 +1,7 @@
+# Splat files are binary, even when stored with a .txt extension
+example/content/files/*.txt binary
+*.sog binary
+*.ply binary
+*.h5p binary
+*.jpg binary
+*.png binary

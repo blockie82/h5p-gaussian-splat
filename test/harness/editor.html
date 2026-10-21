@@ -1,0 +1,62 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Editor harness</title>
+<link rel="stylesheet" href="/core/styles/h5p.css">
+<link rel="stylesheet" href="/editor/styles/css/application.css">
+<link rel="stylesheet" href="/ref/H5PEditor.ColorSelector-1.3/styles/spectrum.css">
+<link rel="stylesheet" href="/ref/H5PEditor.ColorSelector-1.3/styles/color-selector.css">
+<script>if (!location.search.includes("nocss")) document.write('<link rel="stylesheet" href="/libs/H5PEditor.GaussianSplat-1.0/dist/h5p-editor-gaussian-splat.css">');</script>
+<style>body{margin:0;padding:16px;background:#fff;font-family:sans-serif} #form{max-width:960px}</style>
+<script>
+  window.H5PIntegration = { url: '/h5p', postUserStatistics: false, l10n: { H5P: {} }, contents: {}, editor: { ajaxPath: '/ajax/', filesPath: '/editor-files' }, core: { scripts: [], styles: [] }, loadedJs: [], loadedCss: [] };
+</script>
+<script src="/core/js/jquery.js"></script>
+<script src="/core/js/h5p.js"></script>
+<script src="/core/js/h5p-event-dispatcher.js"></script>
+<script src="/core/js/h5p-x-api-event.js"></script>
+<script src="/core/js/h5p-x-api.js"></script>
+<script src="/core/js/h5p-confirmation-dialog.js"></script>
+<script src="/core/js/h5p-tooltip.js"></script>
+<script src="/editor/scripts/h5peditor.js"></script>
+<script src="/editor/scripts/h5peditor-editor.js"></script>
+<script>H5PEditor.language = {}; H5PEditor.filesPath = '/editor-files'; H5PEditor.contentId = undefined;
+H5PEditor.getAjaxUrl = (action) => '/ajax/' + action;
+H5PEditor.fileIcon = { path: '/editor/images/binary-file.png', width: 50, height: 50 };
+H5PEditor.copyrightSemantics = { name: 'copyright', type: 'group', label: 'Copyright', fields: [ { name: 'title', type: 'text', label: 'Title', optional: true }, { name: 'license', type: 'select', label: 'License', default: 'U', options: [ { value: 'U', label: 'Undisclosed' }, { value: 'CC BY', label: 'Attribution', versions: [ { value: '4.0', label: '4.0' } ] } ] }, { name: 'version', type: 'select', label: 'Version', options: [] } ] };</script>
+<script src="/editor/language/en.js"></script>
+<script src="/editor/scripts/h5peditor-semantic-structure.js"></script>
+<script src="/editor/scripts/h5peditor-text.js"></script>
+<script src="/editor/scripts/h5peditor-number.js"></script>
+<script src="/editor/scripts/h5peditor-file-uploader.js"></script>
+<script src="/editor/scripts/h5peditor-file.js"></script>
+<script src="/editor/scripts/h5peditor-image-popup.js"></script>
+<script src="/editor/scripts/h5peditor-image.js"></script>
+<script src="/editor/scripts/h5peditor-group.js"></script>
+<script src="/editor/scripts/h5peditor-boolean.js"></script>
+<script src="/editor/scripts/h5peditor-select.js"></script>
+<script src="/editor/scripts/h5peditor-none.js"></script>
+<script src="/ref/H5PEditor.ColorSelector-1.3/scripts/spectrum.js"></script>
+<script src="/ref/H5PEditor.ColorSelector-1.3/scripts/color-selector.js"></script>
+<script src="/libs/H5PEditor.GaussianSplat-1.0/dist/h5p-editor-gaussian-splat.js"></script>
+</head><body>
+<div id="form" class="h5peditor h5peditor-form"><div class="tree"></div></div>
+<pre id="out"></pre>
+<script>
+(async () => {
+  const [semantics, lang] = await Promise.all([
+    fetch('/libs/H5P.GaussianSplat-1.0/semantics.json').then(r => r.json()),
+    fetch('/libs/H5PEditor.GaussianSplat-1.0/language/en.json').then(r => r.json())
+  ]);
+  H5PEditor.language['H5PEditor.GaussianSplat'] = lang;
+  const chunk = semantics.filter(f => !f.common);
+  const initial = new URLSearchParams(location.search).get('params');
+  const params = initial ? JSON.parse(initial) : {};
+  const root = { passReadies: false, params, field: { type: 'library', name: 'root' }, library: 'H5P.GaussianSplat 1.0',
+    ready(cb) { this.readies ? this.readies.push(cb) : cb(); } };
+  H5PEditor.processSemanticsChunk(chunk, params, H5P.jQuery('#form .tree'), root, 'H5P.GaussianSplat 1.0');
+  window.harness = { params, root, dump: () => JSON.stringify(params, null, 1) };
+  // Expand groups so we can see everything
+  document.querySelectorAll('.field.group').forEach(g => g.classList.add('expanded'));
+  window.harnessReady = true;
+})();
+</script>
+</body></html>

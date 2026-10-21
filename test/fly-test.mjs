@@ -1,0 +1,26 @@
+// Fly mode in the real player: mode button, WASD, mouse look.
+import { chromium } from 'playwright';
+const b = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const p = await b.newPage({ viewport: { width: 1000, height: 600 } });
+p.on('pageerror', (e) => console.log('[err]', e.message));
+await p.goto(`http://localhost:8765/index.html?ws=${process.env.WS || 'ws-sog'}`);
+const frameEl = await p.waitForSelector('iframe');
+const f = await frameEl.contentFrame();
+await f.waitForSelector('.h5p-gs-toolbar:not(.h5p-gs-hidden)');
+await p.waitForTimeout(1500);
+const state = () => f.evaluate(() => { const v = H5P.instances[0].viewer; const pose = v.controls.getPose(); return { mode: v.mode, pos: pose.position.map((x) => +x.toFixed(2)), label: document.querySelector('.h5p-gs-toolbar .h5p-gs-button').getAttribute('aria-label') }; });
+console.log('loaded:', JSON.stringify(await state()));
+await p.screenshot({ path: 'test/out/fly-0.png' });
+await f.click('canvas');
+await p.keyboard.down('w'); await p.waitForTimeout(1500); await p.keyboard.up('w'); await p.waitForTimeout(800);
+console.log('after W:', JSON.stringify(await state()));
+await p.screenshot({ path: 'test/out/fly-1-w.png' });
+const box = await frameEl.boundingBox();
+await p.mouse.move(box.x + 450, box.y + 250); await p.mouse.down(); await p.mouse.move(box.x + 650, box.y + 250, { steps: 10 }); await p.mouse.up();
+await p.waitForTimeout(1500);
+console.log('after drag right:', JSON.stringify(await state()));
+await p.screenshot({ path: 'test/out/fly-2-look.png' });
+await f.click('.h5p-gs-toolbar .h5p-gs-button');
+await p.waitForTimeout(500);
+console.log('after mode button:', JSON.stringify(await state()));
+await b.close();

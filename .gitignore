@@ -1,0 +1,7 @@
+node_modules/
+build/
+release/
+test/out/
+test/site/ws-*/
+test/site/h5p-dist
+.DS_Store

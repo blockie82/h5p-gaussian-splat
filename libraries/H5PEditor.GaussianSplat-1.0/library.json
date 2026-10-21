@@ -1,0 +1,24 @@
+{
+  "title": "H5PEditor.GaussianSplat",
+  "majorVersion": 1,
+  "minorVersion": 0,
+  "patchVersion": 9,
+  "runnable": 0,
+  "machineName": "H5PEditor.GaussianSplat",
+  "author": "Bruce Lockie",
+  "license": "MIT",
+  "coreApi": {
+    "majorVersion": 1,
+    "minorVersion": 19
+  },
+  "preloadedJs": [
+    {
+      "path": "dist/h5p-editor-gaussian-splat.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "dist/h5p-editor-gaussian-splat.css"
+    }
+  ]
+}

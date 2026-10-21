@@ -1,0 +1,40 @@
+{
+  "title": "Gaussian Splat",
+  "description": "Interactive viewer for 3D Gaussian splat scenes (.ply and .sog)",
+  "majorVersion": 1,
+  "minorVersion": 0,
+  "patchVersion": 9,
+  "runnable": 1,
+  "author": "Bruce Lockie",
+  "license": "MIT",
+  "machineName": "H5P.GaussianSplat",
+  "coreApi": {
+    "majorVersion": 1,
+    "minorVersion": 19
+  },
+  "embedTypes": [
+    "iframe"
+  ],
+  "preloadedJs": [
+    {
+      "path": "dist/h5p-gaussian-splat.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "dist/h5p-gaussian-splat.css"
+    }
+  ],
+  "editorDependencies": [
+    {
+      "machineName": "H5PEditor.GaussianSplat",
+      "majorVersion": 1,
+      "minorVersion": 0
+    },
+    {
+      "machineName": "H5PEditor.ColorSelector",
+      "majorVersion": 1,
+      "minorVersion": 3
+    }
+  ]
+}

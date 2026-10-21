@@ -1,21 +1,44 @@
 # H5P Gaussian Splat
 
-An H5P content type for 3D Gaussian splats, built along the same lines as
-H5P.ThreeDModel (glTF). Authors upload a `.ply` or `.sog` splat, and learners
-can orbit, pan and zoom around the scene. Rendering uses the
-[PlayCanvas engine](https://github.com/playcanvas/engine) (MIT), which supports
-both formats natively.
+Show **3D Gaussian splats** (`.sog` and `.ply`) in H5P, for Moodle, WordPress and other H5P
+platforms. Learners can orbit around the scene or fly through it with W, A, S and D. Numbered
+**hotspots** open text, images, video or audio.
 
-**Download:** get the latest `.h5p` files from the
-[Releases page](https://github.com/blockie82/h5p-gaussian-splat/releases), then follow
-[INSTALL.md](INSTALL.md). Upload `gaussian-splat-libraries.h5p` to your platform's H5P
-content types page and *Gaussian Splat* appears in the H5P editor.
+![A Gaussian splat of Bovisand Bay in Moodle, with a hotspot popup open](docs/screenshot.jpg)
 
-| Library | Purpose |
-| --- | --- |
-| `H5P.GaussianSplat 1.0` | Runtime viewer (runnable content type) |
-| `H5PEditor.GaussianSplat 1.0` | Editor widget: file checks, live preview, starting view |
-| `H5PEditor.ColorSelector 1.3` | H5P's own colour picker (vendored, MIT) |
+## Download
+
+**[⬇ Download gaussian-splat-libraries.h5p](https://github.com/blockie82/h5p-gaussian-splat/releases/latest/download/gaussian-splat-libraries.h5p)**
+(latest version, about 1 MB). This is the only file you need to install it.
+
+Want to see it working first? Download the example,
+**[bovisands-gaussian-splat.h5p](https://github.com/blockie82/h5p-gaussian-splat/releases/latest/download/bovisands-gaussian-splat.h5p)**
+(16 MB), and upload it to a content bank.
+
+You don't need anything else in this repository to use the content type: the rest is
+source code. All versions are on the [Releases page](https://github.com/blockie82/h5p-gaussian-splat/releases).
+
+## Install in Moodle
+
+1. Go to *Site administration → H5P → Manage H5P content types*.
+2. Upload `gaussian-splat-libraries.h5p`.
+3. Go to *Site administration → Development → Purge caches* (purge all caches).
+
+**Gaussian Splat** now appears under *Add* in the content bank, with a cube icon. For
+mod_hvp, WordPress, Lumi and other platforms, plus optional settings and troubleshooting,
+see **[INSTALL.md](INSTALL.md)**.
+
+## Creating content
+
+1. In a content bank choose *Add → Gaussian Splat*.
+2. Upload a splat file. `.sog` is recommended because it's 15–25× smaller than `.ply`.
+3. Move to a good spot in the preview and click **Use this view as the starting view**.
+4. Optional: click **Add hotspot**, click the scene where it should go, then add text, an image,
+   video or audio.
+5. Save.
+
+Your site doesn't need to allow `.sog`/`.ply` uploads: if it doesn't, the editor stores the
+file as `.txt` automatically.
 
 ## Features
 
@@ -53,6 +76,20 @@ content types page and *Gaussian Splat* appears in the H5P editor.
 - **Requirements:** the site needs H5P.AdvancedText 1.1, H5P.Image 1.1, H5P.Video 1.6 and H5P.Audio 1.5. Sites with Interactive Book, Course Presentation and similar types already have them. The editor only offers the ones that are installed. The example package includes H5P.AdvancedText for its three text hotspots.
 
 **Other settings:** background colour or image, aspect ratio, max width, min/max height, auto-rotate speed, and turning panning or zooming on or off.
+
+---
+
+# For developers
+
+Everything below describes how the content type works and how to build it.
+
+The release contains these H5P libraries:
+
+| Library | Purpose |
+| --- | --- |
+| `H5P.GaussianSplat 1.0` | Runtime viewer (runnable content type) |
+| `H5PEditor.GaussianSplat 1.0` | Editor widget: file checks, live preview, starting view |
+| `H5PEditor.ColorSelector 1.3` | H5P's own colour picker (vendored, MIT) |
 
 ## Sites that don't allow `ply` and `sog` (e.g. the Moodle sandbox)
 
@@ -112,7 +149,7 @@ extensions are added.
 The libraries themselves contain only js/css/json/svg, so
 `build/gaussian-splat-libraries.h5p` installs on any platform without the patch.
 
-## Files to use
+## Built packages
 
 - `build/bovisands-gaussian-splat.h5p` contains the libraries plus an example:
   the cove at Bovisand Bay (15 MB `.sog`, stored as `.txt` so it uploads to any

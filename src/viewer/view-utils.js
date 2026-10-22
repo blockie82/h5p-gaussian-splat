@@ -69,3 +69,36 @@ export const isWebGL2Available = () => {
     return false;
   }
 };
+
+const DEG = Math.PI / 180;
+
+/**
+ * Camera position for a view (same maths as the controls).
+ * @param {object} view {target, yaw, pitch, distance} (degrees)
+ * @returns {{position:number[], target:number[]}}
+ */
+export const viewToPose = (view) => {
+  const yaw = view.yaw * DEG;
+  const pitch = view.pitch * DEG;
+  const cp = Math.cos(pitch);
+  const dir = [Math.sin(yaw) * cp, -Math.sin(pitch), Math.cos(yaw) * cp];
+  return {
+    position: view.target.map((v, i) => v + dir[i] * view.distance),
+    target: view.target.slice()
+  };
+};
+
+/**
+ * View that looks from `position` at `target`.
+ * @param {number[]} position
+ * @param {number[]} target
+ * @returns {object} {target, yaw, pitch, distance} (degrees)
+ */
+export const poseToView = (position, target) => {
+  const d = position.map((v, i) => v - target[i]);
+  const distance = Math.hypot(...d) || 1;
+  const pitch = -Math.asin(Math.max(-1, Math.min(1, d[1] / distance))) / DEG;
+  const yaw = ((Math.atan2(d[0], d[2]) / DEG) % 360 + 360) % 360;
+  const r = (v, n = 4) => Number(v.toFixed(n));
+  return { target: target.map((v) => r(v)), yaw: r(yaw, 2), pitch: r(pitch, 2), distance: r(distance) };
+};

@@ -368,6 +368,20 @@ export default class SplatViewer {
   }
 
   /**
+   * Convert a world point to the splat file's own coordinates.
+   * @param {number[]} p
+   * @returns {number[]}
+   */
+  worldToLocal(p) {
+    if (!this.splat) {
+      return p.slice();
+    }
+    const out = new Vec3();
+    new Mat4().copy(this.splat.getWorldTransform()).invert().transformPoint(new Vec3(p[0], p[1], p[2]), out);
+    return [out.x, out.y, out.z];
+  }
+
+  /**
    * Project a world point to canvas pixels (CSS units).
    * @param {number[]} p
    * @returns {{x:number, y:number, depth:number, onScreen:boolean}}
@@ -596,6 +610,27 @@ export default class SplatViewer {
   /** @param {string} mode 'orbit' or 'fly' */
   setMode(mode) {
     this.controls.setMode(mode);
+  }
+
+  /**
+   * Turn the camera (on-screen buttons).
+   * @param {number} yawDeg Positive turns left.
+   * @param {number} pitchDeg Positive looks up.
+   */
+  turn(yawDeg, pitchDeg) {
+    this.controls.turn((yawDeg * Math.PI) / 180, (pitchDeg * Math.PI) / 180);
+  }
+
+  /**
+   * Zoom (orbit) or move forwards/backwards (fly).
+   * @param {number} factor < 1 zooms in / moves forwards.
+   */
+  zoomBy(factor) {
+    this.controls.zoom(factor);
+  }
+
+  get canZoom() {
+    return this.controls.mode === 'fly' || !!this.controls.options.allowZoom;
   }
 
   get mode() {

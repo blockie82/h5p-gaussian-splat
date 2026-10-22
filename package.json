@@ -1,6 +1,6 @@
 {
   "name": "h5p-gaussian-splat",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "H5P content type for viewing 3D Gaussian splats (.ply and .sog)",
   "scripts": {
     "build": "node scripts/gen-lang.mjs && node build.mjs",
@@ -12,6 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "@playcanvas/splat-transform": "^3.10.1",
+    "axe-core": "^4.10.3",
     "esbuild": "^0.28.2",
     "h5p-standalone": "^3.8.2",
     "playcanvas": "2.23.3",

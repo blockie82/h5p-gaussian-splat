@@ -98,9 +98,13 @@
   display: flex;
   align-items: center;
   gap: 0.75em;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: max-content;
   max-width: calc(100% - 1.2rem);
+  box-sizing: border-box;
   padding: 0.45em 0.5em 0.45em 0.9em;
-  border-radius: 999px;
+  border-radius: 1.2em;
   background: rgba(20, 20, 24, 0.85);
   color: #fff;
   font-size: 0.9em;
@@ -116,6 +120,33 @@
   color: #222;
   font: inherit;
   cursor: pointer;
+}
+
+.h5peditor-gs-pick-cancel:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px #1a73d9;
+}
+
+.h5peditor-gs-pick-centre {
+  background: #2575be;
+  color: #fff;
+}
+
+/* Crosshair for placing hotspots with the keyboard */
+.h5peditor-gs-crosshair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+  background:
+    linear-gradient(#fff, #fff) center / 2px 100% no-repeat,
+    linear-gradient(#fff, #fff) center / 100% 2px no-repeat;
+  filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }
 
 .h5peditor-gs-hotspot-tools {

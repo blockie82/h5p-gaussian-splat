@@ -163,7 +163,8 @@
   background: var(--h5p-gs-control-bg-hover);
 }
 
-.h5p-gs-button[aria-pressed="true"] {
+.h5p-gs-button[aria-pressed="true"],
+.h5p-gs-button.is-active {
   background: #1a73d9;
 }
 

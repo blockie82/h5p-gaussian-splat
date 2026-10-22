@@ -1,6 +1,7 @@
 import SplatViewer, { isWebGL2Available, parseView, SUPPORTED_EXTENSIONS, FALLBACK_EXTENSION } from '../viewer/splat-viewer.js';
 import { ICONS } from '../viewer/icons.js';
 import HotspotLayer from '../viewer/hotspot-layer.js';
+import NavPad from '../viewer/nav-pad.js';
 import HotspotDialog from './hotspot-dialog.js';
 import '../viewer/viewer.css';
 import './h5p-gaussian-splat.css';
@@ -14,7 +15,8 @@ const DEFAULTS = {
     allowPan: true,
     allowZoom: true,
     allowMove: true,
-    startMode: 'orbit'
+    startMode: 'orbit',
+    navigationButtons: 'auto'
   },
   hotspots: { hotspots: [] },
   visuals: { backgroundColor: 'rgba(30, 31, 34, 1)', hotspotColor: 'rgba(37, 117, 190, 1)' },
@@ -33,7 +35,7 @@ const DEFAULTS = {
   },
   a11y: {
     sceneLabel: '3D Gaussian splat scene',
-    interactionPrompt: 'Orbit mode: drag to rotate, right-drag or Shift-drag to pan, scroll or pinch to zoom, arrow keys rotate. Pressing W, A, S or D switches to fly mode: W, A, S, D and the arrow keys move, Q and E move down and up, drag to look around, scroll to move forwards or backwards. Hold Shift to move faster. Home resets the view.',
+    interactionPrompt: 'Orbit mode: drag to rotate, right-drag or Shift-drag to pan, scroll or pinch to zoom, arrow keys rotate. Pressing W, A, S or D switches to fly mode: W, A, S, D and the arrow keys move, Q and E move down and up, drag to look around, scroll to move forwards or backwards. Hold Shift to move faster. Home resets the view. The navigation buttons do the same with single taps or clicks.',
     buttonFullscreenEnter: 'Enter full screen mode',
     buttonFullscreenExit: 'Exit full screen mode',
     buttonResetView: 'Reset view',
@@ -43,7 +45,17 @@ const DEFAULTS = {
     buttonOrbitMode: 'Switch to orbit mode (drag to rotate around the scene)',
     buttonClose: 'Close',
     buttonHotspots: 'List of hotspots',
-    hotspotLabel: 'Hotspot :num'
+    hotspotLabel: 'Hotspot :num',
+    buttonNavigation: 'Navigation buttons',
+    navigationGroup: 'Navigation',
+    turnLeft: 'Turn left',
+    turnRight: 'Turn right',
+    lookUp: 'Look up',
+    lookDown: 'Look down',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    moveForward: 'Move forwards',
+    moveBackward: 'Move backwards'
   }
 };
 
@@ -220,6 +232,10 @@ export default class GaussianSplat extends H5P.EventDispatcher {
       this.buttonHotspots.setAttribute('aria-expanded', 'false');
       this.buildHotspotMenu();
     }
+    this.buttonNavigation = this.createButton('move', a11y.buttonNavigation, () => {
+      this.setNavigationVisible(!this.navPad?.visible);
+    });
+    this.buttonNavigation.setAttribute('aria-pressed', 'false');
     if (this.params.behaviour.allowMove) {
       this.buttonMode = this.createButton('fly', a11y.buttonFlyMode, () => {
         this.viewer?.setMode(this.viewer.mode === 'fly' ? 'orbit' : 'fly');
@@ -314,6 +330,7 @@ export default class GaussianSplat extends H5P.EventDispatcher {
       allowMove: behaviour.allowMove,
       mode: behaviour.startMode,
       onModeChange: () => {
+        this.navPad?.update();
         this.updateModeButton();
         this.updateAutoRotateButton();
       },
@@ -347,6 +364,7 @@ export default class GaussianSplat extends H5P.EventDispatcher {
       this.toolbar.classList.remove('h5p-gs-hidden');
       this.updateAutoRotateButton();
       this.updateModeButton();
+      this.setupNavigation();
       this.setupHotspots();
       this.trigger('loaded');
     }
@@ -365,6 +383,34 @@ export default class GaussianSplat extends H5P.EventDispatcher {
       this.progress.classList.add('h5p-gs-hidden');
       this.trigger('resize');
     }
+  }
+
+  setupNavigation() {
+    const { a11y, behaviour } = this.params;
+    const labels = {};
+    ['navigationGroup', 'turnLeft', 'turnRight', 'lookUp', 'lookDown', 'zoomIn', 'zoomOut',
+      'moveForward', 'moveBackward'].forEach((key) => {
+      labels[key === 'navigationGroup' ? 'group' : key] = decode(a11y[key]);
+    });
+    this.navPad = new NavPad(this.viewer, this.stage, labels, {
+      onUse: () => this.handleInteraction(),
+      before: this.toolbar
+    });
+    let visible = behaviour.navigationButtons === 'show';
+    if (behaviour.navigationButtons !== 'show' && behaviour.navigationButtons !== 'hide') {
+      // 'auto': show on touch screens, where dragging is the only other way
+      visible = !!window.matchMedia?.('(pointer: coarse)').matches;
+    }
+    this.setNavigationVisible(visible);
+  }
+
+  setNavigationVisible(visible) {
+    if (!this.navPad) {
+      return;
+    }
+    this.navPad.setVisible(visible);
+    // Toggle button: fixed label, state in aria-pressed
+    this.buttonNavigation.setAttribute('aria-pressed', String(visible));
   }
 
   setupHotspots() {
@@ -516,7 +562,8 @@ export default class GaussianSplat extends H5P.EventDispatcher {
   updateAutoRotateButton() {
     const on = !!this.viewer?.autoRotate;
     this.buttonAutoRotate.innerHTML = on ? ICONS.rotateStop : ICONS.rotateStart;
-    this.buttonAutoRotate.setAttribute('aria-pressed', String(on));
+    // The label says what the button does, so no aria-pressed as well
+    this.buttonAutoRotate.classList.toggle('is-active', on);
     this.setButtonLabel(this.buttonAutoRotate,
       on ? this.params.a11y.buttonAutoRotateStop : this.params.a11y.buttonAutoRotateStart);
   }

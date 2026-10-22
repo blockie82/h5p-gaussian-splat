@@ -52,13 +52,14 @@
 }
 
 .h5p-gs-hotspot::after {
-  /* Gentle pulse so hotspots are easy to spot */
+  /* Gentle pulse so hotspots are easy to spot. Runs twice (under 5 s) so
+     nothing keeps moving on screen (WCAG 2.2.2). */
   content: "";
   position: absolute;
   inset: -2px;
   border-radius: 50%;
   border: 2px solid var(--h5p-gs-hotspot-color, rgba(37, 117, 190, 1));
-  animation: h5p-gs-pulse 2.4s ease-out infinite;
+  animation: h5p-gs-pulse 2.4s ease-out 2 forwards;
   pointer-events: none;
 }
 
@@ -90,5 +91,84 @@
   .h5p-gs-hotspot::after {
     animation: none;
     opacity: 0;
+  }
+}
+
+/* On-screen navigation buttons */
+.h5p-gs-navpad {
+  position: absolute;
+  left: 0.6rem;
+  bottom: 0.6rem;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(3, 2.5rem) 0.4rem 2.5rem;
+  grid-template-rows: repeat(3, 2.5rem);
+  grid-template-areas:
+    ". up . . in"
+    "left . right . ."
+    ". down . . out";
+  gap: 0.15rem;
+}
+
+.h5p-gs-navpad[hidden] {
+  display: none;
+}
+
+.h5p-gs-navpad-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--h5p-gs-control-bg, rgba(20, 20, 24, 0.62));
+  color: var(--h5p-gs-control-fg, #fff);
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  backdrop-filter: blur(6px);
+}
+
+.h5p-gs-navpad-button[hidden] {
+  display: none;
+}
+
+.h5p-gs-navpad-button:hover,
+.h5p-gs-navpad-button:active {
+  background: var(--h5p-gs-control-bg-hover, rgba(20, 20, 24, 0.82));
+}
+
+.h5p-gs-navpad-button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px #1a73d9;
+}
+
+.h5p-gs-navpad-button svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.h5p-gs-navpad-up { grid-area: up; }
+.h5p-gs-navpad-left { grid-area: left; }
+.h5p-gs-navpad-right { grid-area: right; }
+.h5p-gs-navpad-down { grid-area: down; }
+.h5p-gs-navpad-in { grid-area: in; }
+.h5p-gs-navpad-out { grid-area: out; }
+
+/* Small players: smaller buttons, still at least 24 px (WCAG 2.5.8) */
+@container (max-width: 26rem) {
+  .h5p-gs-navpad {
+    bottom: 3.4rem; /* above the toolbar */
+    grid-template-columns: repeat(3, 2rem) 0.3rem 2rem;
+    grid-template-rows: repeat(3, 2rem);
+  }
+  .h5p-gs-navpad-button {
+    width: 2rem;
+    height: 2rem;
   }
 }

@@ -47,6 +47,15 @@ c.setMode('orbit'); step(1);
 check('switching to orbit keeps camera pose', JSON.stringify(f(pose().position)) === JSON.stringify(pf) && JSON.stringify(fwd()) === JSON.stringify(ff));
 const t0 = f(c.target); c.rotate(100, 0); step(2);
 check('orbit drag rotates around target', JSON.stringify(f(c.current.target)) === JSON.stringify(t0));
+// On-screen buttons: turn(+yaw) turns left, turn(+pitch) looks up, in fly mode on the spot
+c.setMode('fly');
+c.setView({ target: [0, 0, 0], yaw: 0, pitch: 0, distance: 20 }, true);
+const tb = f(pose().position);
+c.turn(0.5, 0); step(2);
+check('button turn left keeps position (fly)', JSON.stringify(f(pose().position)) === JSON.stringify(tb));
+check('button turn left looks left (-X)', fwd()[0] < -0.3, `forward ${fwd()}`);
+c.turn(0, 0.3); step(2);
+check('button look up looks up', fwd()[1] > 0.1, `forward ${fwd()}`);
 // allowMove false: WASD ignored
 c = new OrbitControls(el, { allowMove: false }); c.setSceneRadius(10); c.setView({ target: [0, 0, 0], yaw: 0, pitch: 0, distance: 20 }, true);
 key('down', 'KeyW'); step(1);

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.10
+Accessibility (WCAG 2.2 AA) and editor fixes. See *Accessibility* in the README.
+- **On-screen navigation buttons** for turning, looking up and down, and zooming or moving. Tap for a step, hold to keep going. Shown on touch screens by default, toggled from the toolbar, with a new *On-screen navigation buttons* behaviour setting. Gives a way to use the scene without dragging or pinching (WCAG 2.5.1, 2.5.7).
+- Hotspot markers pulse twice and then stop, instead of pulsing forever (WCAG 2.2.2).
+- **Place hotspots with the keyboard:** *Add hotspot* now shows a crosshair and focuses the preview. Aim with the arrow keys or W, A, S, D, then press Enter or *Place at crosshair*.
+- Changing *Up direction* or *Fine-tune orientation* now turns a saved starting view with the scene instead of clearing it.
+- Uploads: if the check for `.ply`/`.sog` support gives an unclear answer, the file goes straight to the `.txt` route rather than risking an error message on the first upload.
+- The editor preview retries once if loading fails, for servers that are briefly slow to serve a just-uploaded file.
+- Toggle buttons expose their state correctly to screen readers, and the navigation buttons come before the toolbar in the Tab order.
+
 ## 1.0.9
 - New cube icon for the content type.
 - New example: the cove at Bovisand Bay, opening in fly mode on a chosen view, with three text hotspots.

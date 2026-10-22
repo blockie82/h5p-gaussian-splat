@@ -128,6 +128,21 @@
               "label": "Fly"
             }
           ]
+        },
+        {
+          "label": "On-screen navigation buttons",
+          "description": "Buttons to turn, look up and down, and zoom or move with single taps or clicks, for learners who can't drag or use a keyboard. Learners can always show or hide them from the toolbar.",
+          "options": [
+            {
+              "label": "Shown on touch screens, hidden otherwise"
+            },
+            {
+              "label": "Shown"
+            },
+            {
+              "label": "Hidden"
+            }
+          ]
         }
       ]
     },
@@ -228,7 +243,7 @@
         {
           "label": "Interaction instructions",
           "description": "Read out to screen reader users when the scene gets focus.",
-          "default": "Orbit mode: drag to rotate, right-drag or Shift-drag to pan, scroll or pinch to zoom, arrow keys rotate. Pressing W, A, S or D switches to fly mode: W, A, S, D and the arrow keys move, Q and E move down and up, drag to look around, scroll to move forwards or backwards. Hold Shift to move faster. Home resets the view."
+          "default": "Orbit mode: drag to rotate, right-drag or Shift-drag to pan, scroll or pinch to zoom, arrow keys rotate. Pressing W, A, S or D switches to fly mode: W, A, S, D and the arrow keys move, Q and E move down and up, drag to look around, scroll to move forwards or backwards. Hold Shift to move faster. Home resets the view. The navigation buttons do the same with single taps or clicks."
         },
         {
           "label": "Full screen button (enter)",
@@ -269,6 +284,46 @@
         {
           "label": "Hotspot label (used when a hotspot has no title)",
           "default": "Hotspot :num"
+        },
+        {
+          "label": "Navigation buttons toggle",
+          "default": "Navigation buttons"
+        },
+        {
+          "label": "Navigation buttons group",
+          "default": "Navigation"
+        },
+        {
+          "label": "Turn left button",
+          "default": "Turn left"
+        },
+        {
+          "label": "Turn right button",
+          "default": "Turn right"
+        },
+        {
+          "label": "Look up button",
+          "default": "Look up"
+        },
+        {
+          "label": "Look down button",
+          "default": "Look down"
+        },
+        {
+          "label": "Zoom in button",
+          "default": "Zoom in"
+        },
+        {
+          "label": "Zoom out button",
+          "default": "Zoom out"
+        },
+        {
+          "label": "Move forwards button (fly mode)",
+          "default": "Move forwards"
+        },
+        {
+          "label": "Move backwards button (fly mode)",
+          "default": "Move backwards"
         }
       ]
     }

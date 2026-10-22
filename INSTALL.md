@@ -1,4 +1,4 @@
-# Installing H5P Gaussian Splat 1.0.9
+# Installing H5P Gaussian Splat 1.0.10
 
 ## What's in this release
 
@@ -71,5 +71,7 @@ Upload a newer `gaussian-splat-libraries.h5p` in the same place, then purge cach
 | "File type isn't allowed" / `not-in-whitelist` | `.ply`/`.sog` aren't on the allow-list. Since 1.0.1 the editor stores the file as `.txt` automatically. To keep real extensions, see step 4. |
 | "Unsupported redirect detected" when uploading | Your Moodle session has expired. This happens hourly on sandbox.moodledemo.net. Reload the page, log in and try again. |
 | Editor or styles look wrong after an update | Purge caches and reload the page. |
+| Starting view not kept | Click *Use this view as the starting view* (the line next to it should say *Starting view: custom*), then save the content. Uploading a different file resets the view on purpose. If auto-rotate is on, the scene starts turning straight away. Since 1.0.10, changing the orientation no longer resets it. |
+| An error message the first time a file is added | Make sure 1.0.10 or later is installed (and caches purged). If it still happens, note the exact message: it comes either from the site (e.g. upload size limit, expired session) or from the preview. |
 | Scene upside down or on its side | In the editor, change *Up direction in the file*, or use *Fine-tune orientation*. |
 | "WebGL 2 is not available" | The learner's browser or device can't display 3D. Update the browser or try another device. |

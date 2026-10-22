@@ -1,4 +1,6 @@
-import { isWebGL2Available, parseView, serializeView, UP_AXIS_ROTATIONS, FALLBACK_EXTENSION } from '../viewer/view-utils.js';
+import {
+  isWebGL2Available, parseView, serializeView, viewToPose, poseToView, UP_AXIS_ROTATIONS, FALLBACK_EXTENSION
+} from '../viewer/view-utils.js';
 import { ICONS } from '../viewer/icons.js';
 import { registerHotspotsWidget } from './hotspots-widget.js';
 import '../viewer/viewer.css';
@@ -99,11 +101,13 @@ const LARGE_FILE_BYTES = 50 * 1024 * 1024;
 
 const FALLBACK_STRINGS = {
   preview: 'Preview',
-  previewHelp: 'Drag to rotate, right-drag or Shift-drag to pan, scroll to zoom. Click the preview and press W, A, S or D to fly (Q/E down/up, drag to look around, hold Shift to go faster). Then save the view learners will start from.',
+  previewHelp: 'Drag to rotate, right-drag or Shift-drag to pan, scroll to zoom. Click the preview and press W, A, S or D to fly (Q/E down/up, drag to look around, hold Shift to go faster). Keyboard: Tab to the preview, then use the arrow keys to turn and + / − to zoom. Then save the view learners will start from.',
   addHotspot: 'Add hotspot',
-  placeNew: 'Click on the scene where the new hotspot should go.',
-  placeExisting: 'Click on the scene to place hotspot :num.',
+  placeNew: 'Click on the scene where the new hotspot should go, or aim the crosshair at it and press Enter.',
+  placeExisting: 'Click on the scene to place hotspot :num, or aim the crosshair at it and press Enter.',
   pickMissed: 'There is no splat at that point. Click directly on the scene.',
+  pickMissedCentre: 'There is no splat under the crosshair. Turn the view (arrow keys, or W, A, S, D) so the crosshair is on the scene.',
+  placeAtCentre: 'Place at crosshair',
   cancel: 'Cancel',
   placeOnScene: 'Place on scene',
   moveOnScene: 'Move on scene',
@@ -120,6 +124,7 @@ const FALLBACK_STRINGS = {
   startViewSaved: 'Starting view saved.',
   startViewCleared: 'Automatic starting view restored.',
   startViewResetOrientation: 'The orientation changed, so the starting view was reset.',
+  startViewAdjusted: 'The starting view was turned with the scene.',
   loading: 'Loading preview…',
   loadingPercent: 'Loading preview… :percent %',
   preparing: 'Preparing preview…',
@@ -296,7 +301,9 @@ export class GaussianSplatWidget {
         rememberExtensionAllowed(ext, allowed);
       }
     }
-    this.startUpload(file, allowed === false);
+    // If the check was inconclusive (e.g. a network or server hiccup), use the
+    // .txt route, which every site accepts, instead of risking an error.
+    this.startUpload(file, allowed !== true);
   }
 
   startUpload(file, fallback) {
@@ -399,7 +406,12 @@ export class GaussianSplatWidget {
     this.previewWrapper.classList.add('h5p-gs-hidden');
   }
 
-  async showPreview(file) {
+  /**
+   * @param {object} file
+   * @param {number} [attempt=0] Retries after a failed load (a just-uploaded
+   *   file or the preview code can briefly be unavailable on some servers).
+   */
+  async showPreview(file, attempt = 0) {
     this.previewFile = file;
     this.previewWrapper.classList.remove('h5p-gs-hidden');
     this.updateViewState();
@@ -419,6 +431,13 @@ export class GaussianSplatWidget {
       ({ SplatViewer } = await loadPreview());
     }
     catch (error) {
+      if (attempt < 1 && this.previewFile === file) {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        if (this.previewFile === file) {
+          this.showPreview(file, attempt + 1);
+        }
+        return;
+      }
       this.loading.classList.add('h5p-gs-hidden');
       this.showError(t('loadError', { ':error': String(error?.message ?? error) }));
       return;
@@ -476,10 +495,17 @@ export class GaussianSplatWidget {
         this.removeFile();
         return;
       }
-      else {
-        this.showError(t('loadError', { ':error': H5PEditor.htmlspecialchars?.(String(error?.message ?? error)) ?? '' }));
-      }
       this.destroyViewer();
+      if (attempt < 1) {
+        this.loading.textContent = t('loading');
+        this.loading.classList.remove('h5p-gs-hidden');
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        if (this.previewFile === file && !this.viewer) {
+          this.showPreview(file, attempt + 1);
+        }
+        return;
+      }
+      this.showError(t('loadError', { ':error': H5PEditor.htmlspecialchars?.(String(error?.message ?? error)) ?? '' }));
       this.stage.classList.add('h5p-gs-hidden');
     }
     finally {
@@ -506,8 +532,22 @@ export class GaussianSplatWidget {
       return;
     }
     this.orientationKey = key;
-    // Stored views are in the rotated coordinate system, so they no longer fit
-    if (this.getCameraView()) {
+    const saved = this.getCameraView();
+    if (saved && this.viewer?.splat) {
+      // Keep looking at the same part of the scene from the same spot: move
+      // the saved camera along with the scene.
+      const pose = viewToPose(saved);
+      const position = this.viewer.worldToLocal(pose.position);
+      const target = this.viewer.worldToLocal(pose.target);
+      this.viewer.setOrientation(orientation.upAxis, orientation.rotation, false);
+      const view = poseToView(this.viewer.localToWorld(position), this.viewer.localToWorld(target));
+      this.setCameraView(serializeView(view));
+      this.viewer.setView(view);
+      this.updateViewState(t('startViewAdjusted'));
+      return;
+    }
+    if (saved) {
+      // No preview to convert it with: the old view would not fit any more
       this.setCameraView('');
       this.updateViewState(t('startViewResetOrientation'));
     }
@@ -615,19 +655,43 @@ export class GaussianSplatWidget {
     this.cancelPick();
     this.previewWrapper.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 
+    const returnFocus = document.activeElement;
     const banner = document.createElement('div');
     banner.className = 'h5peditor-gs-pick-banner';
     banner.setAttribute('role', 'status');
     const text = document.createElement('span');
     text.textContent = message;
+    // Keyboard alternative to clicking: aim the crosshair, then place
+    const centre = document.createElement('button');
+    centre.type = 'button';
+    centre.className = 'h5peditor-gs-pick-cancel h5peditor-gs-pick-centre';
+    centre.textContent = t('placeAtCentre');
     const cancel = document.createElement('button');
     cancel.type = 'button';
     cancel.className = 'h5peditor-gs-pick-cancel';
     cancel.textContent = t('cancel');
-    cancel.addEventListener('click', () => this.cancelPick());
-    banner.append(text, cancel);
-    this.stage.appendChild(banner);
+    cancel.addEventListener('click', () => {
+      this.cancelPick();
+      returnFocus?.focus?.();
+    });
+    banner.append(text, centre, cancel);
+    const crosshair = document.createElement('div');
+    crosshair.className = 'h5peditor-gs-crosshair';
+    crosshair.setAttribute('aria-hidden', 'true');
+    this.stage.append(crosshair, banner);
     this.stage.classList.add('picking');
+
+    const placeAtCentre = () => {
+      const rect = viewer.canvas.getBoundingClientRect();
+      const hit = viewer.pick(rect.left + rect.width / 2, rect.top + rect.height / 2, 10);
+      if (!hit) {
+        text.textContent = t('pickMissedCentre');
+        return;
+      }
+      this.cancelPick();
+      onPick(hit.local);
+    };
+    centre.addEventListener('click', placeAtCentre);
 
     let down = null;
     const onDown = (event) => {
@@ -647,13 +711,28 @@ export class GaussianSplatWidget {
     };
     const onKey = (event) => {
       if (event.key === 'Escape') {
+        const inStage = this.stage.contains(document.activeElement);
         this.cancelPick();
+        if (inStage) {
+          returnFocus?.focus?.();
+        }
+      }
+    };
+    const onCanvasKey = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        placeAtCentre();
       }
     };
     viewer.canvas.addEventListener('pointerdown', onDown);
     viewer.canvas.addEventListener('pointerup', onUp);
     document.addEventListener('keydown', onKey);
+    viewer.canvas.addEventListener('keydown', onCanvasKey);
+    // Keyboard users can aim straight away
+    viewer.canvas.focus({ preventScroll: true });
     this.pickCleanup = () => {
+      viewer.canvas.removeEventListener('keydown', onCanvasKey);
+      crosshair.remove();
       viewer.canvas.removeEventListener('pointerdown', onDown);
       viewer.canvas.removeEventListener('pointerup', onUp);
       document.removeEventListener('keydown', onKey);

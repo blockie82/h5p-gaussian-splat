@@ -371,6 +371,27 @@ export default class OrbitControls {
     this.changed();
   }
 
+  /**
+   * Turn by angles (on-screen buttons). Positive yaw turns left, positive
+   * pitch looks up; matches dragging and the arrow keys.
+   * @param {number} dYaw Radians.
+   * @param {number} dPitch Radians.
+   */
+  turn(dYaw, dPitch) {
+    if (this.mode === 'fly') {
+      const position = this.goalPosition();
+      this.yaw += dYaw;
+      this.pitch = clamp(this.pitch + dPitch, -MAX_PITCH, MAX_PITCH);
+      const dir = this.direction(this.yaw, this.pitch);
+      this.target = position.map((v, i) => v - dir[i] * this.distance);
+    }
+    else {
+      this.yaw += dYaw;
+      this.pitch = clamp(this.pitch + dPitch, -MAX_PITCH, MAX_PITCH);
+    }
+    this.changed();
+  }
+
   pan(dxPixels, dyPixels) {
     if (!this.options.allowPan) {
       return;

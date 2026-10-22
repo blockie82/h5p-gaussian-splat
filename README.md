@@ -34,8 +34,9 @@ see **[INSTALL.md](INSTALL.md)**.
 2. Upload a splat file. `.sog` is recommended because it's 15–25× smaller than `.ply`.
 3. Move to a good spot in the preview and click **Use this view as the starting view**.
 4. Optional: click **Add hotspot**, click the scene where it should go, then add text, an image,
-   video or audio.
-5. Save.
+   video or audio. Using the keyboard instead? Aim the crosshair with the arrow keys and press Enter.
+5. Fill in **Alternative text** (a short description of the scene for screen reader users).
+6. Save.
 
 Your site doesn't need to allow `.sog`/`.ply` uploads: if it doesn't, the editor stores the
 file as `.txt` automatically.
@@ -50,6 +51,7 @@ file as `.txt` automatically.
   - **Fly**: drag looks around on the spot (drag right turns right), `W` `A` `S` `D` or the arrow keys move, `Q`/`E` move down/up, and scroll moves forwards/backwards. Movement eases in and out.
   - Pressing a movement key in orbit mode switches to fly. Hold **Shift** to move 4× faster; this also works if pressed mid-move. `Home` resets the view and mode.
   - Keys are matched by physical position, so AZERTY keyboards get ZQSD. Authors choose the *Starting camera mode* and can turn fly mode off.
+- **On-screen navigation buttons** (turn, look up/down, zoom or move forwards/backwards): tap for a step, press and hold to keep going. They're shown on touch screens and can be switched on or off from the toolbar.
 - Toolbar with auto-rotate, reset view and full screen buttons.
 - A progress bar while the file downloads, plus an optional poster image.
 - An optional "load on click" mode for large files.
@@ -63,19 +65,79 @@ file as `.txt` automatically.
 - Live preview showing the format, splat count and file size.
 - A warning for `.ply` files over 50 MB, with the command to convert them to `.sog`.
 - **Use this view as the starting view**: saves the camera from the preview. It's stored as plain numbers (`x y z yaw pitch distance`), because H5P escapes quotes in text fields when content is saved. Views saved as JSON by 1.0.0/1.0.1 are still read.
-- **Up direction** (−Y is the default for 3DGS/COLMAP captures; +Y, +Z and −Z are also available) and **Fine-tune orientation** (tilt and turn in degrees) for scenes that look tilted. The preview updates live.
+- **Up direction** (−Y is the default for 3DGS/COLMAP captures; +Y, +Z and −Z are also available) and **Fine-tune orientation** (tilt and turn in degrees) for scenes that look tilted. The preview updates live, and a saved starting view turns with the scene instead of being lost.
 - If the platform rejects the upload, a hint explains that the administrator must allow the extensions.
 
 **Hotspots**
 - Numbered markers fixed to points in the scene. Clicking one opens a popup with any mix of **Text, Image, Video and Audio**, up to six items per hotspot and fifty hotspots. These are H5P's own content types, so you get their usual editors and players.
-- **Editor:** *Add hotspot* under the preview, then click the scene. Each hotspot has *Place on scene / Move on scene*, and clicking a marker in the preview opens its settings.
+- **Editor:** *Add hotspot* under the preview, then click the scene, or aim the crosshair with the keyboard and press Enter (*Place at crosshair*). Each hotspot has *Place on scene / Move on scene*, and clicking a marker in the preview opens its settings.
 - **Picking:** a ray through the click finds the first dense cluster of splats, so stray splats are ignored. Positions are stored in the file's own coordinates, so they stay put if you change the up direction or orientation.
-- **Player:** media pauses when its popup closes. Esc closes a popup, focus returns to its marker, and markers pulse gently (unless reduced motion is on).
+- **Player:** media pauses when its popup closes. Esc closes a popup, focus returns to its marker, and markers pulse twice when the scene appears (not at all with reduced motion on).
 - **Hotspot list:** the toolbar has a list of all hotspots, which also reaches markers that are off-screen and turns the camera towards the chosen one.
 - **Colour:** H5P blue (#2575BE) by default, changeable under Visual settings.
 - **Requirements:** the site needs H5P.AdvancedText 1.1, H5P.Image 1.1, H5P.Video 1.6 and H5P.Audio 1.5. Sites with Interactive Book, Course Presentation and similar types already have them. The editor only offers the ones that are installed. The example package includes H5P.AdvancedText for its three text hotspots.
 
-**Other settings:** background colour or image, aspect ratio, max width, min/max height, auto-rotate speed, and turning panning or zooming on or off.
+**Other settings:** background colour or image, aspect ratio, max width, min/max height, auto-rotate speed, turning panning or zooming on or off, and when the navigation buttons show.
+
+## Accessibility
+
+The content type is built to meet **WCAG 2.2 level AA**. Version 1.0.10 was checked
+with axe-core 4.10 (WCAG 2.0, 2.1 and 2.2 A/AA rules: no violations on the player, with the
+navigation buttons shown, with a hotspot popup open and with the hotspot list open) and
+with keyboard-only and touch-only walkthroughs of the player and the Moodle editor. This is
+a self-assessment, not a formal audit; testing with screen reader users is still recommended.
+
+**Using it without a mouse**
+
+| Key | Orbit mode | Fly mode |
+| --- | --- | --- |
+| `Tab` | Moves between the scene, navigation buttons, toolbar and hotspots | same |
+| Arrow keys | Rotate around the scene (`Shift` + arrows pans) | Move |
+| `W` `A` `S` `D` | Switch to fly mode and move | Move forwards, left, back, right |
+| `Q` / `E` | – | Move down / up |
+| `+` / `−`, `Page Up` / `Page Down` | Zoom in / out | Move forwards / backwards |
+| `Shift` (held) | – | Move 4× faster |
+| `Home` or `0` | Reset the view | Reset the view |
+| `Enter` / `Space` on a hotspot | Open its popup | same |
+| `Esc` | Close the popup or hotspot list | same |
+
+**Without dragging or multi-finger gestures** (WCAG 2.5.1, 2.5.7): the on-screen navigation
+buttons do everything dragging and pinching do. Each tap is one step (15°, or one zoom
+step), and holding a button keeps it going. The hotspot list in the toolbar opens any hotspot,
+including ones that are off-screen, and turns the camera towards it.
+
+**What has been checked**
+
+| WCAG 2.2 criterion | How it's met |
+| --- | --- |
+| 1.1.1 Non-text content | The scene is labelled with the author's *Alternative text* and linked to the instructions; hotspots use their titles as labels. Icons are hidden from screen readers and every button has a text label. |
+| 1.3.1 Info and relationships | Popups are labelled dialogs with a heading; the hotspot list is a real list; the navigation buttons are a labelled group. |
+| 1.4.3 / 1.4.11 Contrast | Toolbar and navigation icons: at least 5:1 against their background, whatever the scene colour behind it. White hotspot numbers on H5P blue: 4.8:1. Focus rings are white with a blue halo, so they show on light and dark scenes. |
+| 1.4.4 / 1.4.10 Resize and reflow | Sizes are in `rem`; popups take the full width in small players. |
+| 2.1.1 Keyboard | Everything works with the keyboard, see the table above. In the editor, the preview can be turned with the arrow keys and hotspots placed with *Place at crosshair* or `Enter`. |
+| 2.1.2 No keyboard trap | `Tab` always leaves the scene; popups are non-modal and close with `Esc`. |
+| 2.1.4 Character key shortcuts | Single-letter keys (`W` `A` `S` `D` `Q` `E`) only work while the scene has focus. |
+| 2.2.2 Pause, stop, hide | Hotspot markers pulse twice (under 5 seconds). Auto-rotate is off by default; when an author turns it on, learners can stop it from the toolbar, and it pauses while they drag or fly. |
+| 2.3.3 Animation from interactions | With *reduced motion* switched on, the pulse is off. |
+| 2.4.3 Focus order / 2.4.7 Focus visible | Focus moves from the scene to the navigation buttons, the toolbar and the hotspots, and returns to the marker when a popup closes. |
+| 2.5.1 Pointer gestures / 2.5.7 Dragging | On-screen navigation buttons, see above. |
+| 2.5.8 Target size | Toolbar and navigation buttons are 40 px (navigation buttons are 32 px in very small players); hotspot markers are 30 px. The minimum is 24 px. |
+| 4.1.2 Name, role, value | Toggle buttons expose their state (`aria-pressed`); the hotspot list button exposes `aria-expanded`; progress uses `role="progressbar"` with a value. |
+
+**What authors need to do**
+
+- Write *Alternative text* that says what the scene shows. The 3D view itself can't be read by a screen reader, so this text and the hotspots carry the information.
+- Give every hotspot a clear title, and put the important information in hotspot text, not only in the scene.
+- Add captions to hotspot videos and a transcript for audio (H5P's Video and Audio editors have fields for this).
+- Choose a hotspot colour with at least 3:1 contrast against the scene, and keep white text readable on it (4.5:1).
+- Leave *On-screen navigation buttons* on *Shown on touch screens* or *Shown*. Choosing *Hidden* only hides them at the start; learners can still turn them on from the toolbar.
+- If you turn on auto-rotate, keep it slow. Learners can stop it from the toolbar.
+
+**Known limits**
+
+- A Gaussian splat is a photographic 3D capture: the 3D view can't be described automatically, so the alternative text and hotspots are the accessible version of the scene.
+- Markers stay visible when the camera looks at them through solid parts of the scene.
+- WebGL 2 is required. Without it, a message is shown instead of the scene.
 
 ---
 
@@ -206,12 +268,15 @@ The browser tests use Playwright (set `CHROMIUM_PATH` to use a specific Chromium
 - `test/editor-test.mjs` with `test/editor-server.mjs`: runs the real widgets
   from `h5p-editor-php-library` with this widget. It covers the extension
   check, rejecting a non-splat PLY, PLY and SOG previews, saving a starting
-  view, and the view being reset when the orientation changes.
+  view, and the view turning with the scene when the orientation changes.
   `WHITELIST="json png" node test/editor-server.mjs` simulates an unpatched
   server.
 - `test/controls-unit.mjs`: unit checks of the camera controller (fly look direction, Shift speed, mode switching).
 - `test/moodle/install-libs.php`, `first-load.mjs` and `e2e.mjs`: run against a real Moodle 5.3 with PostgreSQL 17 and Moodle's default H5P allow-list. They install the libraries the way *Manage H5P content types* does, time the first editor load, then cover upload (with the `.txt` fallback), preview, saving a start view, saving the content, and playing it back.
 - `test/moodle/hotspots-e2e.mjs` / `hotspots-av.mjs`: create Text, Image, Audio and Video hotspots in the Moodle content bank editor, save, open them in the player, and check that media pauses on close.
+- `test/a11y-axe.mjs`: runs axe-core (WCAG 2.0/2.1/2.2 A and AA rules) on the player in four states.
+- `test/navpad-test.mjs` (`TOUCH=1` for a touch device): navigation buttons shown/hidden by default, tap and hold, keyboard use, labels per mode, and the pulse limit.
+- `test/moodle/a11y-editor.mjs`: in the Moodle editor, saves a start view with the keyboard, checks it survives an *Up direction* change, places a hotspot with the keyboard only, and checks what's stored.
 - `test/php/validate.php`: validates the built packages with the official
   `H5PValidator` from h5p-php-library.
 
